@@ -18,13 +18,13 @@
 # include <unistd.h>
 # define WIDTH 960
 # define HEIGHT 600
+# define A 0
+# define D 2
 # define UP 126
 # define DOWN 125
 # define RIGHT 124
 # define LEFT 123
 # define ESC 53
-# define FPS 60
-# define PAUSE 36
 # define MUSIC 46
 # define KEYPRESSEVENT 2
 # define KEYPRESSMASK (1L << 0)
@@ -40,53 +40,10 @@
 # define STRUCTURENOTIFYMASK (1L << 17)
 
 
-typedef struct		s_point
-{
-	double			x;
-	double			y;
-	double			z;
-}					t_point;
-
-typedef	struct		s_pixel
-{
-	double			x;
-	double			y;
-	double			z;
-}					t_pixel;
-/*
-typedef struct		s_env
-{
-	int				color;
-	double			zoom;
-	int				center_x;
-	int				center_y;
-	double			angle_y;
-	double			angle_x;
-	double			angle_z;
-	int				b_x;
-	int				b_y;
-	int				b_z;
-	char			*str;
-	int				rainbow;
-	int				nblr;
-	int				modr;
-	int				r[6];
-}					t_env;
-
-typedef	struct		s_line
-{
-	int				dx;
-	int				dy;
-	int				err;
-	int				xi;
-	int				yi;
-	int				xf;
-	int				yf;
-	int				xinc;
-	int				yinc;
-	int				i;
-}					t_line;
-*/
+	//int				rainbow;
+	//int				nblr;
+	//int				modr;
+	//int				r[6];
 
 typedef	struct		s_pos
 {
@@ -97,8 +54,6 @@ typedef	struct		s_pos
 	double		diry;
 	double		planex;
 	double		planey;
-//	double		angle;
-//	double		vue;
 }			t_pos;
 
 typedef struct		s_ray
@@ -121,66 +76,54 @@ typedef struct		s_ray
 	int		side;
 }			t_ray;
 
-typedef struct		s_wall
+typedef struct			s_wall
 {
 	int		lineheight;
 	int		drawstart;
 	int		drawend;
-}			t_wall;
+}				t_wall;
 
-typedef struct		s_music
+typedef struct			s_music
 {
-	int				music_on;
-	int				pause_on;
-}					t_music;
+	int		music_on;
+	int		pause_on;
+}				t_music;
 
-/*
-typedef	struct				s_wall
+typedef struct			s_cmd
 {
-	int				h_x;
-	int				h_y;
-	int				v_x;
-	int				v_y;
-	int				yb;
-	int				xb;
-	int				ya;
-	int				xa;
-	
-}					t_wall;
-*/
-typedef struct				s_cmd
-{
-	int				up;
-	int				down;
-	int				right;
-	int				left;
-}					t_cmd;
+	int		viewl;
+	int		viewr;
+	int		up;
+	int		down;
+	int		right;
+	int		left;
+}				t_cmd;
 
-typedef struct				s_env
+typedef struct			s_env
 {
 	// pour la fenetre
-	int			fd;
-	char			*line;
-	double			xmax;
-	double			ymax;
-	int			valid;
+	int		fd;
+	char		*line;
+	double		xmax;
+	double		ymax;
+	int		valid;
 	// pour la mlx 
-	void			*mlx;
-	void			*win;
-	void			*img_ptr;
-	int			bpp;
-	int			size_line;
-	int			endian;
-	char			*adi;
-	int			**map;
-	double			movespeed;
-	double			rotspeed;
-	t_ray			ray;
-	t_wall			draw;
-	t_pos			player;
-	t_music			music;
-	t_cmd			move;
-}					t_env;
+	void		*mlx;
+	void		*win;
+	void		*img_ptr;
+	int		bpp;
+	int		size_line;
+	int		endian;
+	char		*adi;
+	int		**map;
+	double		movespeed;
+	double		rotspeed;
+	t_ray		ray;
+	t_wall		draw;
+	t_pos		player;
+	t_music		music;
+	t_cmd		move;
+}				t_env;
 
 int				ft_exit(t_env *list);
 int				ft_key_press(int keycode, t_env *list);
@@ -191,16 +134,5 @@ void				ft_ray(int x, t_env *list);
 void				ft_verif_name(char *str, t_env *list);
 void				ft_verif_map(char *filename, t_env *list);
 void				ft_parser(t_env *list, int x, int y);
-//void				ft_init(t_env *list);
-//int				ft_wolf(t_env *list);
-//int				ft_loop_ok(t_env *list);
-//int				ft_key_release(int keycode, t_env *list);
-//int				ft_key_press(int keycode, t_env *list);
-//void				ft_music(t_env *list);
-//int				ft_button_release(int button, int x, int y, t_env *list);
-//int				ft_button_press(int button, int x, int y, t_env *list);
-//int				ft_mouse_motion(int x, int y, t_env *list);
-//int				ft_exit(t_env *list);
-//void				ft_error(int i, char *str);
 
 #endif

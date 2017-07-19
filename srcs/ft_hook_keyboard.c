@@ -14,30 +14,13 @@
 
 /*void		ft_music(t_env *list)
 {
-	if (list->music.music_on == 1)
-	{
-		system("killall -c sh");
-		system("killall afplay");
-	}
-	if (list->i == 1)
-		system("while(true); do afplay YuriOnIce.mp3; done &");
-	if (list->i == 2)
-		system("while(true); do afplay Mandelbrot.mp3; done &");
-	if (list->i == 3)
-		system("while(true); do afplay Burning_Ship.mp3; done &");
+	system("while(true); do afplay YuriOnIce.mp3; done &");
 	list->music.music_on = 1;
 }*/
 
 static int	ft_key_funct(int keycode, t_env *list)
 {
-	/*int		tmp;
-
-	tmp = list->i;
-	list->i = (keycode == ONE) ? 1 : list->i;
-	list->i = (keycode == TWO) ? 2 : list->i;
-	list->i = (keycode == THREE) ? 3 : list->i;
-	if (list->i != tmp)
-		ft_init(list);
+/*
 	if (keycode == MUSIC && list->music.pause_on == 0)
 	{
 		system("killall -STOP afplay");
@@ -48,9 +31,8 @@ static int	ft_key_funct(int keycode, t_env *list)
 		system("killall -CONT afplay");
 		list->music.pause_on = 0;
 	}
-	if (keycode == PAUSE)
-		list->move.pause = (list->move.pause == 0) ? 1 : 0;
-*/	(keycode == ESC) ? ft_exit(list) : 0;
+*/	if (keycode == ESC)
+		ft_exit(list);
 	return (0);
 }
 
@@ -69,6 +51,10 @@ int			ft_key_press(int keycode, t_env *list)
 		list->move.up = 1;
 	if (keycode == DOWN)
 		list->move.down = 1;
+	if (keycode == A)
+		list->move.viewl = 1;
+	if (keycode == D)
+		list->move.viewr = 1;
 	if (keycode == RIGHT)
 		list->move.right = 1;
 	if (keycode == LEFT)
@@ -81,6 +67,8 @@ int			ft_key_release(int keycode, t_env *list)
 {
 	list->move.up = 0;
 	list->move.down = 0;
+	list->move.viewr = 0;
+	list->move.viewl = 0;
 	list->move.right = 0;
 	list->move.left = 0;
 	return (0);
@@ -110,9 +98,23 @@ int			ft_loop_ok(t_env *list)
 		if (list->map[(int)(list->player.y)][(int)(list->player.x - list->player.dirx * list->movespeed)] == 0)
 			list->player.x -= list->player.dirx * list->movespeed;
 	}
-	if (list->move.left > 0)
-		ft_rotation(list, 1, list->player.dirx, list->player.planex);
 	if (list->move.right > 0)
+	{
+		if (list->map[(int)(list->player.y + list->player.planey * list->movespeed)][(int)(list->player.x)] == 0)
+			list->player.y += list->player.planey * list->movespeed;
+		if (list->map[(int)(list->player.y)][(int)(list->player.x + list->player.planex * list->movespeed)] == 0)
+			list->player.x += list->player.planex * list->movespeed;
+	}
+	if (list->move.left > 0)
+	{
+		if (list->map[(int)(list->player.y - list->player.planey * list->movespeed)][(int)(list->player.x)] == 0)
+			list->player.y -= list->player.planey * list->movespeed;
+		if (list->map[(int)(list->player.y)][(int)(list->player.x - list->player.planex * list->movespeed)] == 0)
+			list->player.x -= list->player.planex * list->movespeed;
+	}
+	if (list->move.viewl > 0)
+		ft_rotation(list, 1, list->player.dirx, list->player.planex);
+	if (list->move.viewr > 0)
 		ft_rotation(list, -1, list->player.dirx, list->player.planex);
 	ft_ray(0, list);
 	return (0);

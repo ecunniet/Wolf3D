@@ -6,7 +6,7 @@
 /*   By: ecunniet <ecunniet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/19 15:55:12 by ecunniet          #+#    #+#             */
-/*   Updated: 2017/04/25 12:01:54 by ecunniet         ###   ########.fr       */
+/*   Updated: 2017/07/19 20:26:57 by ecunniet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,7 @@ typedef struct			s_env
 	t_cmd		move;
 }				t_env;
 
+void			ft_music(t_env *list);
 int				ft_exit(t_env *list);
 int				ft_key_press(int keycode, t_env *list);
 int				ft_key_release(int keycode, t_env *list);

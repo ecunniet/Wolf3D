@@ -6,7 +6,7 @@
 /*   By: ecunniet <ecunniet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/19 15:27:38 by ecunniet          #+#    #+#             */
-/*   Updated: 2017/07/07 12:59:15 by ecunniet         ###   ########.fr       */
+/*   Updated: 2017/07/19 20:25:56 by ecunniet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ static int		ft_draw_pix(t_env *list)
 	list->img_ptr = mlx_new_image(list->mlx, WIDTH, HEIGHT);
 	list->adi = mlx_get_data_addr(list->img_ptr, &list->bpp,
 	&list->size_line, &list->endian);
-	list->music.music_on = 0;
+	ft_music(list);
 	ft_ray(0, list);
 	mlx_put_image_to_window(list->mlx, list->win, list->img_ptr, 0, 0);
 	mlx_hook(list->win, KEYPRESSEVENT, KEYPRESSMASK, &ft_key_press, list);

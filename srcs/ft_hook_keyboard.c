@@ -6,40 +6,39 @@
 /*   By: ecunniet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/25 12:02:04 by ecunniet          #+#    #+#             */
-/*   Updated: 2017/04/25 12:02:14 by ecunniet         ###   ########.fr       */
+/*   Updated: 2017/07/19 20:27:00 by ecunniet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/wolf3d.h"
 
-/*void		ft_music(t_env *list)
+void		ft_music(t_env *list)
 {
-	system("while(true); do afplay YuriOnIce.mp3; done &");
+	system("while(true); do afplay music/YuriOnIce.mp3; done &");
 	list->music.music_on = 1;
-}*/
+}
 
 static int	ft_key_funct(int keycode, t_env *list)
 {
-/*
-	if (keycode == MUSIC && list->music.pause_on == 0)
+	if (keycode == MUSIC && list->music.music_on == 1)
 	{
 		system("killall -STOP afplay");
-		list->music.pause_on = 1;
+		list->music.music_on = 0;
 	}
-	else if (keycode == MUSIC && list->music.pause_on == 1)
+	else if (keycode == MUSIC && list->music.music_on == 0)
 	{
 		system("killall -CONT afplay");
-		list->music.pause_on = 0;
+		list->music.music_on = 1;
 	}
-*/	if (keycode == ESC)
+	if (keycode == ESC)
 		ft_exit(list);
 	return (0);
 }
 
 int			ft_exit(t_env *list)
 {
-	//system("killall -c sh");
-	//system("killall afplay");
+	system("killall -c sh");
+	system("killall afplay");
 	exit(EXIT_SUCCESS);
 }
 

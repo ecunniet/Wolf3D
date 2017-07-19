@@ -22,7 +22,8 @@ NAME = wolf3d
 
 SRCS = srcs/ft_error.c \
 	srcs/main.c \
-	srcs/ft_parser.c
+	srcs/ft_parser.c \
+	srcs/ft_hook_keyboard.c
 
 #==============================================================================#
 #                               // OBJECTS \\                                  #

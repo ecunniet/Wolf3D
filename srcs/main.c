@@ -12,13 +12,63 @@
 
 #include "../includes/wolf3d.h"
 
-void			ft_find_distance(t_env *list)
+void			ft_pixel_put_image(t_env *list, int x, int y, int color)
 {
-	if (list->ray.side == 0)
-		list->ray.perpwalldist = (list->ray.mapx - list->ray.rayposx + (1 - list->ray.stepx) / 2) / list->ray.raydistx;
+	int tmp;
+
+	tmp = (x + y * WIDTH);
+	if (x < WIDTH && y < HEIGHT && y >= 0 && x >= 0)
+		*(((int*)list->adi) + tmp) = color;
+}
+
+void			ft_draw_wall(t_env *list, int color, int x)
+{
+	int y;
+
+	y = 0;
+	while (y < HEIGHT)
+	{
+		if (y >= list->draw.drawstart && y < list->draw.drawend)
+			ft_pixel_put_image(list, x, y, color);
+		else
+			ft_pixel_put_image(list, x, y, 0x000000);
+		y++;
+	}
+}
+
+void			ft_color(t_env *list, int x)
+{
+	if (list->ray.side == 1)
+	{
+		if (list->ray.stepy > 0)
+			ft_draw_wall(list, 0xff0000, x);
+		else
+			ft_draw_wall(list, 0x0000ff, x);
 	}
 	else
-		list->ray.perpwalldist = (list->ray.mapy - list->ray.rayposy + (1 - list->ray.stepy) / 2) / list->ray.raydisty;	
+	{
+		if (list->ray.stepx > 0)
+			ft_draw_wall(list, 0x00ff00, x);
+		else
+			ft_draw_wall(list, 0xffffff, x);
+	}
+}
+
+
+void			ft_find_distance(t_env *list, int x)
+{
+	if (list->ray.side == 0)
+		list->ray.perpwalldist = (list->ray.mapx - list->ray.rayposx + (1 - list->ray.stepx) / 2) / list->ray.raydirx;
+	else
+		list->ray.perpwalldist = (list->ray.mapy - list->ray.rayposy + (1 - list->ray.stepy) / 2) / list->ray.raydiry;
+	list->draw.lineheight = (int)(HEIGHT / list->ray.perpwalldist);
+	list->draw.drawstart = HEIGHT / 2 - list->draw.lineheight / 2;
+	if (list->draw.drawstart < 0)
+		list->draw.drawstart = 0;
+	list->draw.drawend = HEIGHT / 2 + list->draw.lineheight / 2;
+	if (list->draw.drawend >= HEIGHT)
+		list->draw.drawend = HEIGHT - 1;
+	ft_color(list, x);
 }
 
 void			ft_find_wall(t_env *list)
@@ -79,32 +129,33 @@ void			ft_ray(int x, t_env *list)
 			list->ray.sidedisty = (list->ray.mapy + 1 - list->ray.rayposy) * list->ray.deltadisty;
 		}
 		ft_find_wall(list);
-		ft_find_distance(list);
+		ft_find_distance(list, x);
 		x++;
 	}
+	mlx_put_image_to_window(list->mlx, list->win, list->img_ptr, 0, 0);
 }
 
 static int		ft_draw_pix(t_env *list)
 {
+	list->move.up = 0;
+	list->move.down = 0;
+	list->move.right = 0;
+	list->move.left = 0;
+	list->movespeed = 0.2;
+	list->rotspeed = 0.05;
 	list->mlx = mlx_init();
 	list->win = mlx_new_window(list->mlx, WIDTH, HEIGHT, "Wolf3D");
 	list->img_ptr = mlx_new_image(list->mlx, WIDTH, HEIGHT);
 	list->adi = mlx_get_data_addr(list->img_ptr, &list->bpp,
 	&list->size_line, &list->endian);
-//	list->music.music_on = 0;
-//	ft_init(list);
+	list->music.music_on = 0;
 	ft_ray(0, list);
 	mlx_put_image_to_window(list->mlx, list->win, list->img_ptr, 0, 0);
-//	mlx_hook(list->win, KEYPRESSEVENT, KEYPRESSMASK, &ft_key_press, list);
-//	mlx_hook(list->win, KEYRELEASEEVENT, KEYRELEASEMASK,
-//	&ft_key_release, list);
-//	mlx_hook(list->win, MOTIONNOTIFY, POINTERMOTIONMASK,
-//	&ft_mouse_motion, list);
-//	mlx_hook(list->win, BUTTONPRESS, BUTTONPRESSMASK, &ft_button_press, list);
-//	mlx_hook(list->win, BUTTONRELEASE, BUTTONRELEASEMASK,
-//	&ft_button_release, list);
-//	mlx_hook(list->win, DESTROYNOTIFY, STRUCTURENOTIFYMASK, &ft_exit, list);
-//	mlx_loop_hook(list->mlx, &ft_loop_ok, list);
+	mlx_hook(list->win, KEYPRESSEVENT, KEYPRESSMASK, &ft_key_press, list);
+	mlx_hook(list->win, KEYRELEASEEVENT, KEYRELEASEMASK,
+	&ft_key_release, list);
+	mlx_hook(list->win, DESTROYNOTIFY, STRUCTURENOTIFYMASK, &ft_exit, list);
+	mlx_loop_hook(list->mlx, &ft_loop_ok, list);
 	mlx_loop(list->mlx);
 	return (0);
 }

@@ -16,21 +16,14 @@
 # include "../minilibx_macos/mlx.h"
 # include <math.h>
 # include <unistd.h>
-# define WIDTH 320
-# define HEIGHT 200
+# define WIDTH 960
+# define HEIGHT 600
 # define UP 126
 # define DOWN 125
 # define RIGHT 124
 # define LEFT 123
-# define MORE 24
-# define LESS 27
-# define I 34
-# define O 31
 # define ESC 53
 # define FPS 60
-# define ONE 18
-# define TWO 19
-# define THREE 20
 # define PAUSE 36
 # define MUSIC 46
 # define KEYPRESSEVENT 2
@@ -128,6 +121,13 @@ typedef struct		s_ray
 	int		side;
 }			t_ray;
 
+typedef struct		s_wall
+{
+	int		lineheight;
+	int		drawstart;
+	int		drawend;
+}			t_wall;
+
 typedef struct		s_music
 {
 	int				music_on;
@@ -150,18 +150,10 @@ typedef	struct				s_wall
 */
 typedef struct				s_cmd
 {
-	int				pause;
-	int				x0;
-	int				y0;
-	int				on;
 	int				up;
 	int				down;
 	int				right;
 	int				left;
-	int				z_more;
-	int				z_less;
-	int				i_more;
-	int				i_less;
 }					t_cmd;
 
 typedef struct				s_env
@@ -180,17 +172,22 @@ typedef struct				s_env
 	int			size_line;
 	int			endian;
 	char			*adi;
-	double			zoom;
-	int			i;
 	int			**map;
+	double			movespeed;
+	double			rotspeed;
 	t_ray			ray;
-	//t_wall			wall;
+	t_wall			draw;
 	t_pos			player;
 	t_music			music;
 	t_cmd			move;
 }					t_env;
 
+int				ft_exit(t_env *list);
+int				ft_key_press(int keycode, t_env *list);
+int				ft_key_release(int keycode, t_env *list);
+int				ft_loop_ok(t_env *list);
 void				ft_error(int i, char *str);
+void				ft_ray(int x, t_env *list);
 void				ft_verif_name(char *str, t_env *list);
 void				ft_verif_map(char *filename, t_env *list);
 void				ft_parser(t_env *list, int x, int y);

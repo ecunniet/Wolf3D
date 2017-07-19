@@ -59,7 +59,7 @@ void	ft_parser(t_env *list, int x, int y)
 				list->player.dirx = -1;
 				list->player.diry = 0;
 				list->player.planex = 0;
-				list->player.planey = 0.60;
+				list->player.planey = 0.66;
 				//list->player.z = 0.5 * 64;
 				//list->player.angle = 330;
 				//list->player.vue = 60;

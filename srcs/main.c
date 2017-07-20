@@ -6,7 +6,7 @@
 /*   By: ecunniet <ecunniet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/19 15:27:38 by ecunniet          #+#    #+#             */
-/*   Updated: 2017/07/20 23:01:49 by ecunniet         ###   ########.fr       */
+/*   Updated: 2017/07/20 23:58:39 by ecunniet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,21 +24,36 @@ void			ft_pixel_put_image(t_env *list, int x, int y, int color)
 void			ft_draw_wall(t_env *list, int color, int x)
 {
 	int y;
+	int j;
 
+	list->nblr = (list->draw.drawend - list->draw.drawstart) / 6;
+	list->modr = (list->draw.drawend - list->draw.drawstart) % 6;
 	y = 0;
 	while (y < HEIGHT)
 	{
 		if (list->rainbow == 1)
 		{
-			if (list->draw.)
-		}
-		else
-		{
+		/*if (y < list->draw.drawstart)
+				ft_pixel_put_image(list, x, y, *(list->r));
+			else */
 			if (y >= list->draw.drawstart && y < list->draw.drawend)
-				ft_pixel_put_image(list, x, y, color);
+			{
+				if ((y - list->draw.drawstart) / (list->nblr + 1) >= list->modr)
+					j = ((y - list->draw.drawstart) - list->modr) / list->nblr;
+				else
+					j = (y - list->draw.drawstart) / (list->nblr + 1);
+				j = (j == 6) ? 5 : j;
+				ft_pixel_put_image(list, x, y, *(list->r + j));
+			}
 			else
 				ft_pixel_put_image(list, x, y, 0x000000);
+		//	else
+			//ft_pixel_put_image(list, x, y, *(list->r + 5));
 		}
+		else if (y >= list->draw.drawstart && y < list->draw.drawend)
+			ft_pixel_put_image(list, x, y, color);
+		else
+			ft_pixel_put_image(list, x, y, 0x000000);
 		y++;
 	}
 }
@@ -167,19 +182,19 @@ int				main(int argc, char **argv)
 
 	if (argc == 2)
 	{
-		list->move.up = 0;
-		list->move.down = 0;
-		list->move.right = 0;
-		list->move.left = 0;
-		list->movespeed = 0.1;
-		list->rotspeed = 0.05;
-		list->rainbow = 0;
-		*(list->r) = 0xf40000;
-		*(list->r + 1) = 0xffa500;
-		*(list->r + 2) = 0xf4f400;
-		*(list->r + 3) = 0x00f400;
-		*(list->r + 4) = 0x0028f4;
-		*(list->r + 5) = 0xa300f4;
+		list.move.up = 0;
+		list.move.down = 0;
+		list.move.right = 0;
+		list.move.left = 0;
+		list.movespeed = 0.1;
+		list.rotspeed = 0.05;
+		list.rainbow = 0;
+		*(list.r) = 0xf40000;
+		*(list.r + 1) = 0xffa500;
+		*(list.r + 2) = 0xf4f400;
+		*(list.r + 3) = 0x00f400;
+		*(list.r + 4) = 0x0028f4;
+		*(list.r + 5) = 0xa300f4;
 		ft_verif_name(argv[1], &list);
 		ft_draw_pix(&list);
 	}

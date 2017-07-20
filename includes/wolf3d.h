@@ -6,7 +6,7 @@
 /*   By: ecunniet <ecunniet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/19 15:55:12 by ecunniet          #+#    #+#             */
-/*   Updated: 2017/07/19 20:26:57 by ecunniet         ###   ########.fr       */
+/*   Updated: 2017/07/20 23:01:54 by ecunniet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,34 +16,29 @@
 # include "../minilibx_macos/mlx.h"
 # include <math.h>
 # include <unistd.h>
+# include <sys/types.h>
+# include <sys/uio.h>
+# include <fcntl.h>
+# include <stdlib.h>
 # define WIDTH 960
 # define HEIGHT 600
 # define A 0
 # define D 2
+# define RB 15
 # define UP 126
 # define DOWN 125
 # define RIGHT 124
 # define LEFT 123
 # define ESC 53
 # define MUSIC 46
+# define BUFF_SIZEF 1
 # define KEYPRESSEVENT 2
 # define KEYPRESSMASK (1L << 0)
 # define KEYRELEASEEVENT 3
 # define KEYRELEASEMASK (1L << 1)
-# define BUTTONPRESS 4
-# define BUTTONPRESSMASK (1L << 2)
-# define BUTTONRELEASE 5
-# define BUTTONRELEASEMASK (1L << 3)
-# define MOTIONNOTIFY 6
-# define POINTERMOTIONMASK (1L << 6)
 # define DESTROYNOTIFY 17
 # define STRUCTURENOTIFYMASK (1L << 17)
 
-
-	//int				rainbow;
-	//int				nblr;
-	//int				modr;
-	//int				r[6];
 
 typedef	struct		s_pos
 {
@@ -118,6 +113,10 @@ typedef struct			s_env
 	int		**map;
 	double		movespeed;
 	double		rotspeed;
+	int				rainbow;
+	int				nblr;
+	int				modr;
+	int				r[6];
 	t_ray		ray;
 	t_wall		draw;
 	t_pos		player;
@@ -135,5 +134,6 @@ void				ft_ray(int x, t_env *list);
 void				ft_verif_name(char *str, t_env *list);
 void				ft_verif_map(char *filename, t_env *list);
 void				ft_parser(t_env *list, int x, int y);
+int					get_next_line_first(const int fd, char **line);
 
 #endif

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ecunniet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/02/06 15:48:25 by ecunniet          #+#    #+#             */
-/*   Updated: 2017/02/06 15:48:29 by ecunniet         ###   ########.fr       */
+/*   Created: 2017/07/20 22:06:31 by ecunniet          #+#    #+#             */
+/*   Updated: 2017/07/20 22:46:38 by ecunniet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,65 +30,40 @@ int			ft_verif_x(int xmax_new, int xmax_old)
 
 void		ft_error(int i, char *str)
 {
+	if (i == -8)
+		ft_putstr("Invalid map. Too large. 1 000 000 000 lines is the maximum height.");
 	if (i == -7)
-		ft_putstr("Invalid map. Too large. 1 000 000 000 is the maximum height and the maximum width.");
-	// mauvaise configuration
+		ft_putstr("Invalid map. Too large. 2 000 000 000 caracters (including spaces and line breaks) is the maximum width.");
 	if (i == -6)
 		ft_putstr("Invalid map.\n");
-	// map avec rien ou map trop petite w < 3 ou h < 3
 	if (i == -5)
 		ft_putstr("Invalid map. Too small.\n");
-	// personnage n'est pas place
 	if (i == -4)
 		ft_putstr("Invalid map. The character isn't placed on the map.\n");
-	// pas la meme longueur
 	if (i == -3)
 		ft_putstr("Invalid map. Lines don't have the same length.\n");
-	// dans le PARSER GOGOL !!!!! que des 1 pour les lignes et colomns
 	if (i == -2)
-		ft_putstr("Invalid map. The first and last lines, just like the first and last colomns must only be composed of numbers from 1 to 9.\n");
-	// probleme de fermeture
+		ft_putstr("Invalid map. The first and last lines, just like the first and last colomns must be composed of numbers from 1 to 9.\n");
 	if (i == -1)
 		ft_putstr("Fail to close file\n");
-	// le fichier n'existe pas
 	if (i == 0)
 	{
 		ft_putstr("No file");
 		ft_putstr(str);
 		ft_putchar('\n');
 	}
-	// argc = 1 donc pas de arg
 	if (i == 1)
 		ft_putstr("Missing file. There is no map for the game.\n");
-	// le fichier n'a pas le bon nom
 	if (i == 2)
 	{
 		ft_putstr("Invalid filename: ");
 		ft_putstr(str);
 		ft_putchar('\n');
 	}
-	// trop de fichier
 	if (i > 2)
 		ft_putstr("Wolf3D needs ONLY one map file to start.\n");
 	ft_putstr("Usage: ./wolf3d <filename.wolf>\n");
 	exit(EXIT_FAILURE);
-}
-
-size_t	ft_strlen_verif(const char *s, t_env *list)
-{
-	size_t i;
-
-	i = 0;
-	while (s[i] != '\0')
-	{
-		i++;
-		if (i == 1999999999)
-		{
-			free(list->line);
-			ft_error(-7, 0);
-		}
-	}
-	return (i);
 }
 
 static int	ft_count_x(char const *s, char c, t_env *list)
@@ -100,7 +75,7 @@ static int	ft_count_x(char const *s, char c, t_env *list)
 	j = 0;
 	if (s == NULL)
 		ft_error(-5, 0);
-	while (i < ft_strlen_verif(s, list))
+	while (i < ft_strlen(s))
 	{
 		if (!(s[i] == c || s[i] == 'A' || (s[i] >= '0' && s[i] <= '9'))
 		|| ((s[i] == 'A'|| (s[i] >= '0' && s[i] <= '9')) && !(s[i + 1] == c || s[i + 1] == '\0')) || ((s[i + 1] == c || s[i + 1] == '\0') && !(s[i] == 'A' || (s[i] >= '0' && s[i] <= '9'))))
@@ -117,6 +92,70 @@ static int	ft_count_x(char const *s, char c, t_env *list)
 	return (j);
 }
 
+static	int		ft_read_file(char **line, char (*mem)[], int fd, int x)
+{
+	char	tmp[BUFF_SIZEF + 1];
+	char	*ptr;
+	int		ret;
+
+	while ((ret = read(fd, tmp, BUFF_SIZEF)) > 0)
+	{
+		tmp[ret] = 0;
+		if ((ptr = ft_strchr(tmp, '\n')))
+		{
+			*ptr = 0;
+			ptr++;
+			ft_strcpy((char*)mem, ptr);
+			*line = (*line == NULL) ? ft_strdup(tmp)
+				: ft_strjoin_free(*line, tmp, 1);
+			return (1);
+		}
+		else
+		{
+			*line = (*line == NULL) ? ft_strdup(tmp)
+				: ft_strjoin_free(*line, tmp, 1);
+			x++;
+		}
+		if (x == 1999999999)
+		{
+			free(line);
+			ft_error(-7, 0);
+		}
+	}
+	if (ret == -1)
+		return (-1);
+	return (0);
+}
+
+int				get_next_line_first(const int fd, char **line)
+{
+	static char		mem[BUFF_SIZEF + 1] = "";
+	int				i;
+	char			*ptr;
+
+	if (fd < 0 || line == NULL)
+		return (-1);
+	*line = NULL;
+	if (ft_strlen(mem) > 0)
+	{
+		if ((ptr = ft_strchr(mem, '\n')))
+		{
+			*ptr = 0;
+			ptr++;
+			*line = ft_strdup(mem);
+			ft_strcpy(mem, ptr);
+			return (1);
+		}
+		else
+		{
+			*line = ft_strdup(mem);
+			*mem = 0;
+		}
+	}
+	i = ft_read_file(&(*line), &mem, fd, 0);
+	return (i == 0 && *line != NULL) ? 1 : i;
+}
+
 void		ft_verif_map(char *filename, t_env *list)
 {
 	list->valid = 0;
@@ -124,13 +163,13 @@ void		ft_verif_map(char *filename, t_env *list)
 	list->ymax = 0;
 	if ((list->fd = open(filename, O_RDONLY)))
 	{
-		while (get_next_line(list->fd, &list->line))
+		while (get_next_line_first(list->fd, &list->line))
 		{
 			list->xmax = ft_verif_x(ft_count_x(list->line, ' ', list), list->xmax);
 			free(list->line);
 			list->ymax++;
 			if (list->ymax == 1000000000)
-				ft_error(-7, 0);
+				ft_error(-8, 0);
 		}
 		if (close(list->fd) == 0)
 		{
@@ -177,27 +216,3 @@ void		ft_verif_name(char *str, t_env *list)
 	else
 		ft_error(2, str);
 }
-
-/*void		ft_free_struct(t_env *list)
-{
-	free(list->p);
-	free(list->tmp);
-	free(list->h);
-	exit(EXIT_SUCCESS);
-}
-
-static void	ft_initrainbow(t_env *list)
-{
-	list->rainbow = 0;
-	list->b_x = 0;
-	list->b_y = 0;
-	list->b_z = 0;
-	*(list->r) = 0xf40000;
-	*(list->r + 1) = 0xffa500;
-	*(list->r + 2) = 0xf4f400;
-	*(list->r + 3) = 0x00f400;
-	*(list->r + 4) = 0x0028f4;
-	*(list->r + 5) = 0xa300f4;
-	list->nblr = (int)(list->ymax) / 6;
-	list->modr = (int)(list->ymax) % 6;
-}*/

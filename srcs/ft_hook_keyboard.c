@@ -6,7 +6,7 @@
 /*   By: ecunniet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/25 12:02:04 by ecunniet          #+#    #+#             */
-/*   Updated: 2017/07/19 20:27:00 by ecunniet         ###   ########.fr       */
+/*   Updated: 2017/07/20 22:48:31 by ecunniet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,10 @@ void		ft_music(t_env *list)
 
 static int	ft_key_funct(int keycode, t_env *list)
 {
+	if (keycode == RB && list->rainbow == 0)
+		list->rainbow = 1;
+	else if (keycode == RB && list->rainbow == 1)
+		list->rainbow = 0;
 	if (keycode == MUSIC && list->music.music_on == 1)
 	{
 		system("killall -STOP afplay");
@@ -44,8 +48,6 @@ int			ft_exit(t_env *list)
 
 int			ft_key_press(int keycode, t_env *list)
 {
-	ft_putnbr(keycode);
-	ft_putchar('\n');
 	if (keycode == UP)
 		list->move.up = 1;
 	if (keycode == DOWN)

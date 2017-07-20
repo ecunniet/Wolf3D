@@ -6,7 +6,7 @@
 /*   By: ecunniet <ecunniet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/19 15:27:38 by ecunniet          #+#    #+#             */
-/*   Updated: 2017/07/19 20:25:56 by ecunniet         ###   ########.fr       */
+/*   Updated: 2017/07/20 23:01:49 by ecunniet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,17 @@ void			ft_draw_wall(t_env *list, int color, int x)
 	y = 0;
 	while (y < HEIGHT)
 	{
-		if (y >= list->draw.drawstart && y < list->draw.drawend)
-			ft_pixel_put_image(list, x, y, color);
+		if (list->rainbow == 1)
+		{
+			if (list->draw.)
+		}
 		else
-			ft_pixel_put_image(list, x, y, 0x000000);
+		{
+			if (y >= list->draw.drawstart && y < list->draw.drawend)
+				ft_pixel_put_image(list, x, y, color);
+			else
+				ft_pixel_put_image(list, x, y, 0x000000);
+		}
 		y++;
 	}
 }
@@ -137,12 +144,6 @@ void			ft_ray(int x, t_env *list)
 
 static int		ft_draw_pix(t_env *list)
 {
-	list->move.up = 0;
-	list->move.down = 0;
-	list->move.right = 0;
-	list->move.left = 0;
-	list->movespeed = 0.2;
-	list->rotspeed = 0.05;
 	list->mlx = mlx_init();
 	list->win = mlx_new_window(list->mlx, WIDTH, HEIGHT, "Wolf3D");
 	list->img_ptr = mlx_new_image(list->mlx, WIDTH, HEIGHT);
@@ -166,6 +167,19 @@ int				main(int argc, char **argv)
 
 	if (argc == 2)
 	{
+		list->move.up = 0;
+		list->move.down = 0;
+		list->move.right = 0;
+		list->move.left = 0;
+		list->movespeed = 0.1;
+		list->rotspeed = 0.05;
+		list->rainbow = 0;
+		*(list->r) = 0xf40000;
+		*(list->r + 1) = 0xffa500;
+		*(list->r + 2) = 0xf4f400;
+		*(list->r + 3) = 0x00f400;
+		*(list->r + 4) = 0x0028f4;
+		*(list->r + 5) = 0xa300f4;
 		ft_verif_name(argv[1], &list);
 		ft_draw_pix(&list);
 	}

@@ -43,7 +43,7 @@ void	ft_parser(t_env *list, int x, int y)
 		x = 0;
 		ptr = list->line;
 		while (x < list->xmax)
-	{
+		{
 			if ((y == 0 || y == list->ymax - 1 \
 			|| x == 0 || x == list->xmax) \
 			&& (*ptr < '1' || *ptr > '9'))
@@ -60,9 +60,6 @@ void	ft_parser(t_env *list, int x, int y)
 				list->player.diry = 0;
 				list->player.planex = 0;
 				list->player.planey = 0.66;
-				//list->player.z = 0.5 * 64;
-				//list->player.angle = 330;
-				//list->player.vue = 60;
 			}
 			ptr++;
 			while (*ptr == ' ')

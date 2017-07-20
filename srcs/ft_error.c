@@ -30,6 +30,8 @@ int			ft_verif_x(int xmax_new, int xmax_old)
 
 void		ft_error(int i, char *str)
 {
+	if (i == -7)
+		ft_putstr("Invalid map. Too large. 1 000 000 000 is the maximum height and the maximum width.");
 	// mauvaise configuration
 	if (i == -6)
 		ft_putstr("Invalid map.\n");
@@ -44,7 +46,7 @@ void		ft_error(int i, char *str)
 		ft_putstr("Invalid map. Lines don't have the same length.\n");
 	// dans le PARSER GOGOL !!!!! que des 1 pour les lignes et colomns
 	if (i == -2)
-		ft_putstr("Invalid map. The first and last lines, just like the first and last colomns must only be composed of '1' or more.\n");
+		ft_putstr("Invalid map. The first and last lines, just like the first and last colomns must only be composed of numbers from 1 to 9.\n");
 	// probleme de fermeture
 	if (i == -1)
 		ft_putstr("Fail to close file\n");
@@ -72,6 +74,22 @@ void		ft_error(int i, char *str)
 	exit(EXIT_FAILURE);
 }
 
+size_t	ft_strlen_verif(const char *s, t_env *list)
+{
+	size_t i;
+
+	i = 0;
+	while (s[i] != '\0')
+	{
+		i++;
+		if (i == 1999999999)
+		{
+			free(list->line);
+			ft_error(-7, 0);
+		}
+	}
+	return (i);
+}
 
 static int	ft_count_x(char const *s, char c, t_env *list)
 {
@@ -82,10 +100,10 @@ static int	ft_count_x(char const *s, char c, t_env *list)
 	j = 0;
 	if (s == NULL)
 		ft_error(-5, 0);
-	while (i < ft_strlen(s))
+	while (i < ft_strlen_verif(s, list))
 	{
 		if (!(s[i] == c || s[i] == 'A' || (s[i] >= '0' && s[i] <= '9'))
-		|| ((s[i] == 'A'|| (s[i] >= '0' && s[i] <= '9')) && !(s[i + 1] == c || s[i + 1] == '\0')))
+		|| ((s[i] == 'A'|| (s[i] >= '0' && s[i] <= '9')) && !(s[i + 1] == c || s[i + 1] == '\0')) || ((s[i + 1] == c || s[i + 1] == '\0') && !(s[i] == 'A' || (s[i] >= '0' && s[i] <= '9'))))
 			ft_error(-6, 0);
 		else if ((s[i] == 'A'|| (s[i] >= '0' && s[i] <= '9'))
 			&& (s[i + 1] == c || s[i + 1] == '\0'))
@@ -111,6 +129,8 @@ void		ft_verif_map(char *filename, t_env *list)
 			list->xmax = ft_verif_x(ft_count_x(list->line, ' ', list), list->xmax);
 			free(list->line);
 			list->ymax++;
+			if (list->ymax == 1000000000)
+				ft_error(-7, 0);
 		}
 		if (close(list->fd) == 0)
 		{

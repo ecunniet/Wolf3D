@@ -6,7 +6,7 @@
 #    By: ecunniet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/11/04 12:32:58 by ecunniet          #+#    #+#              #
-#    Updated: 2016/12/19 21:43:25 by ecunniet         ###   ########.fr        #
+#    Updated: 2017/07/24 21:35:06 by ecunniet         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -56,4 +56,7 @@ fclean: clean
 re:	fclean
 	$(MAKE) all
 
-.PHONY = all clean fclean re
+norme:
+	@norminette $(SRC) libft.h
+
+.PHONY = all clean fclean re norme

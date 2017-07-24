@@ -6,7 +6,7 @@
 /*   By: ecunniet <ecunniet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/19 15:55:12 by ecunniet          #+#    #+#             */
-/*   Updated: 2017/07/20 23:01:54 by ecunniet         ###   ########.fr       */
+/*   Updated: 2017/07/24 23:39:03 by ecunniet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,11 @@
 # define A 0
 # define D 2
 # define RB 15
+# define DRAW list->draw
+# define RAY list->ray
+# define PLAY list->player
+# define ROT list->rotspeed
+# define MO list->movespeed
 # define UP 126
 # define DOWN 125
 # define RIGHT 124
@@ -39,103 +44,101 @@
 # define DESTROYNOTIFY 17
 # define STRUCTURENOTIFYMASK (1L << 17)
 
-
 typedef	struct		s_pos
 {
-	double		x;
-	double		y;
-	double		z;
-	double		dirx;
-	double		diry;
-	double		planex;
-	double		planey;
-}			t_pos;
+	double			x;
+	double			y;
+	double			z;
+	double			dirx;
+	double			diry;
+	double			planex;
+	double			planey;
+}					t_pos;
 
 typedef struct		s_ray
 {
-	double		rayposx;
-	double		rayposy;
-	double		raydirx;
-	double		raydiry;
-	double		camerax;
-	int		mapx;
-	int		mapy;
-	double		sidedistx;
-	double		sidedisty;
-	int		stepx;
-	int		stepy;
-	double		deltadistx;
-	double		deltadisty;
-	double		perpwalldist;
-	int		hit;
-	int		side;
-}			t_ray;
+	double			rayposx;
+	double			rayposy;
+	double			raydirx;
+	double			raydiry;
+	double			camerax;
+	int				mapx;
+	int				mapy;
+	double			sidedistx;
+	double			sidedisty;
+	int				stepx;
+	int				stepy;
+	double			deltadistx;
+	double			deltadisty;
+	double			perpwalldist;
+	int				hit;
+	int				side;
+}					t_ray;
 
-typedef struct			s_wall
+typedef struct		s_wall
 {
-	int		lineheight;
-	int		drawstart;
-	int		drawend;
-}				t_wall;
+	int				lineheight;
+	int				drawstart;
+	int				drawend;
+}					t_wall;
 
-typedef struct			s_music
+typedef struct		s_music
 {
-	int		music_on;
-	int		pause_on;
-}				t_music;
+	int				music_on;
+	int				pause_on;
+}					t_music;
 
-typedef struct			s_cmd
+typedef struct		s_cmd
 {
-	int		viewl;
-	int		viewr;
-	int		up;
-	int		down;
-	int		right;
-	int		left;
-}				t_cmd;
+	int				viewl;
+	int				viewr;
+	int				up;
+	int				down;
+	int				right;
+	int				left;
+}					t_cmd;
 
-typedef struct			s_env
+typedef struct		s_env
 {
-	// pour la fenetre
-	int		fd;
-	char		*line;
-	double		xmax;
-	double		ymax;
-	int		valid;
-	// pour la mlx 
-	void		*mlx;
-	void		*win;
-	void		*img_ptr;
-	int		bpp;
-	int		size_line;
-	int		endian;
-	char		*adi;
-	int		**map;
-	double		movespeed;
-	double		rotspeed;
-	int		start;
-	int			rainbow;
-	int			nblr;
-	int			modr;
-	int			r[6];
-	t_ray		ray;
-	t_wall		draw;
-	t_pos		player;
-	t_music		music;
-	t_cmd		move;
-}				t_env;
+	int				fd;
+	char			*line;
+	double			xmax;
+	double			ymax;
+	int				valid;
+	void			*mlx;
+	void			*win;
+	void			*img_ptr;
+	int				bpp;
+	int				size_line;
+	int				endian;
+	char			*adi;
+	int				**map;
+	double			movespeed;
+	double			rotspeed;
+	int				start;
+	int				rainbow;
+	int				nblr;
+	int				modr;
+	int				r[6];
+	t_ray			ray;
+	t_wall			draw;
+	t_pos			player;
+	t_music			music;
+	t_cmd			move;
+}					t_env;
 
+void				ft_find_distance(t_env *list, int x);
+void				ft_find_wall(t_env *list);
 void				ft_free(int y, t_env *list);
 void				ft_music(t_env *list);
-int				ft_exit(t_env *list);
-int				ft_key_press(int keycode, t_env *list);
-int				ft_key_release(int keycode, t_env *list);
-int				ft_loop(t_env *list);
+int					ft_exit(t_env *list);
+int					ft_key_press(int keycode, t_env *list);
+int					ft_key_release(int keycode, t_env *list);
+int					ft_loop(t_env *list);
 void				ft_error(int i, char *str);
 void				ft_ray(int x, t_env *list);
 void				ft_verif_name(char *str, t_env *list);
-void				ft_verif_map(char *filename, t_env *list);
 void				ft_parser(t_env *list, int x, int y);
-int				get_next_line_first(const int fd, char **line);
+int					get_next_line_first(const int fd, char **line);
 
 #endif

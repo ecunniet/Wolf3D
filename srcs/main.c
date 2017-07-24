@@ -6,142 +6,11 @@
 /*   By: ecunniet <ecunniet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/19 15:27:38 by ecunniet          #+#    #+#             */
-/*   Updated: 2017/07/20 23:58:39 by ecunniet         ###   ########.fr       */
+/*   Updated: 2017/07/24 23:39:33 by ecunniet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/wolf3d.h"
-
-void			ft_pixel_put_image(t_env *list, int x, int y, int color)
-{
-	int tmp;
-
-	tmp = (x + y * WIDTH);
-	if (x < WIDTH && y < HEIGHT && y >= 0 && x >= 0)
-		*(((int*)list->adi) + tmp) = color;
-}
-
-void			ft_draw_wall(t_env *list, int color, int x)
-{
-	int y;
-	int j;
-
-	list->nblr = (list->draw.drawend - list->draw.drawstart) / 6;
-	list->modr = (list->draw.drawend - list->draw.drawstart) % 6;
-	y = 0;
-	while (y < HEIGHT)
-	{
-		if (list->rainbow == 1 && y >= list->draw.drawstart && y < list->draw.drawend)
-		{
-			if ((y - list->draw.drawstart) / (list->nblr + 1) >= list->modr)
-				j = ((y - list->draw.drawstart) - list->modr) / list->nblr;
-			else
-				j = (y - list->draw.drawstart) / (list->nblr + 1);
-			j = (j == 6) ? 5 : j;
-			ft_pixel_put_image(list, x, y, *(list->r + j));
-		}
-		else if (y >= list->draw.drawstart && y < list->draw.drawend)
-			ft_pixel_put_image(list, x, y, color);
-		else
-			ft_pixel_put_image(list, x, y, 0x000000);
-		y++;
-	}
-}
-
-void			ft_color(t_env *list, int x)
-{
-	if (list->ray.side == 1)
-	{
-		if (list->ray.stepy > 0)
-			ft_draw_wall(list, 0xff0000, x);
-		else
-			ft_draw_wall(list, 0x0000ff, x);
-	}
-	else
-	{
-		if (list->ray.stepx > 0)
-			ft_draw_wall(list, 0x00ff00, x);
-		else
-			ft_draw_wall(list, 0xffffff, x);
-	}
-}
-
-
-void			ft_find_distance(t_env *list, int x)
-{
-	if (list->ray.side == 0)
-		list->ray.perpwalldist = (list->ray.mapx - list->ray.rayposx + (1 - list->ray.stepx) / 2) / list->ray.raydirx;
-	else
-		list->ray.perpwalldist = (list->ray.mapy - list->ray.rayposy + (1 - list->ray.stepy) / 2) / list->ray.raydiry;
-	list->draw.lineheight = (int)(HEIGHT / list->ray.perpwalldist);
-	list->draw.drawstart = HEIGHT / 2 - list->draw.lineheight / 2;
-	list->draw.drawend = HEIGHT / 2 + list->draw.lineheight / 2;
-	ft_color(list, x);
-}
-
-void			ft_find_wall(t_env *list)
-{
-	while (list->ray.hit == 0)
-	{
-		if (list->ray.sidedistx < list->ray.sidedisty)
-		{
-			list->ray.sidedistx += list->ray.deltadistx;
-			list->ray.mapx += list->ray.stepx;
-			list->ray.side = 0;
-		}
-		else
-		{
-			list->ray.sidedisty += list->ray.deltadisty;
-			list->ray.mapy += list->ray.stepy;
-			list->ray.side = 1;
-		}
-		if (list->map[list->ray.mapy][list->ray.mapx] > 0)
-			list->ray.hit = 1;
-	}
-}
-
-void			ft_ray(int x, t_env *list)
-{
-	while (x < WIDTH)
-	{
-		list->ray.camerax = 2 * x / (double)(WIDTH) - 1;
-		list->ray.rayposx = list->player.x;
-		list->ray.rayposy = list->player.y;
-		list->ray.raydirx = list->player.dirx + list->player.planex * list->ray.camerax;
-		list->ray.raydiry = list->player.diry + list->player.planey * list->ray.camerax;
-		list->ray.mapx = (int)(list->ray.rayposx);
-		list->ray.mapy = (int)(list->ray.rayposy);
-		list->ray.deltadistx = sqrt(1 + (list->ray.raydiry * list->ray.raydiry) \
-		/ (list->ray.raydirx * list->ray.raydirx));
-		list->ray.deltadisty = sqrt(1 + (list->ray.raydirx * list->ray.raydirx) \
-		/ (list->ray.raydiry * list->ray.raydiry));
-		list->ray.hit = 0;
-		if (list->ray.raydirx < 0)
-		{
-			list->ray.stepx = -1;
-			list->ray.sidedistx = (list->ray.rayposx - list->ray.mapx) * list->ray.deltadistx;
-		}
-		else
-		{
-			list->ray.stepx = 1;
-			list->ray.sidedistx = (list->ray.mapx + 1 - list->ray.rayposx) * list->ray.deltadistx;
-		}
-		if (list->ray.raydiry < 0)
-		{
-			list->ray.stepy = -1;
-			list->ray.sidedisty = (list->ray.rayposy - list->ray.mapy) * list->ray.deltadisty;
-		}
-		else
-		{
-			list->ray.stepy = 1;
-			list->ray.sidedisty = (list->ray.mapy + 1 - list->ray.rayposy) * list->ray.deltadisty;
-		}
-		ft_find_wall(list);
-		ft_find_distance(list, x);
-		x++;
-	}
-	mlx_put_image_to_window(list->mlx, list->win, list->img_ptr, 0, 0);
-}
 
 static int		ft_draw_pix(t_env *list)
 {
@@ -169,8 +38,8 @@ void			ft_init(t_env *list)
 	list->move.down = 0;
 	list->move.right = 0;
 	list->move.left = 0;
-	list->movespeed = 0.15;
-	list->rotspeed = 0.05;
+	MO = 0.2;
+	ROT = 0.05;
 	list->rainbow = 0;
 	*(list->r) = 0xf40000;
 	*(list->r + 1) = 0xffa500;
@@ -180,16 +49,27 @@ void			ft_init(t_env *list)
 	*(list->r + 5) = 0xa300f4;
 }
 
-void			ft_default_map(t_env *list, int i, int x)
+void			ft_define(t_env *list)
 {
 	list->xmax = 8;
 	list->ymax = 8;
+	PLAY.x = 4;
+	PLAY.y = 4;
+	PLAY.dirx = -1;
+	PLAY.diry = 0;
+	PLAY.planex = 0;
+	PLAY.planey = 0.66;
+}
+
+void			ft_default_map(t_env *list, int i, int x)
+{
+	ft_define(list);
 	if (!(list->map = (int **)malloc(sizeof(int *)
 	* list->ymax)))
 		exit(EXIT_FAILURE);
 	while (i < list->ymax)
 	{
-		if(!(list->map[i] = (int *)malloc(sizeof(int) * list->xmax)))
+		if (!(list->map[i] = (int *)malloc(sizeof(int) * list->xmax)))
 		{
 			ft_free(i - 1, list);
 			exit(EXIT_FAILURE);
@@ -197,8 +77,7 @@ void			ft_default_map(t_env *list, int i, int x)
 		x = 0;
 		while (x < list->xmax)
 		{
-			if (i == 0 || i == list->ymax - 1 
-			|| x == 0 || x == list->xmax - 1)
+			if (i == 0 || i == list->ymax - 1 || x == 0 || x == list->xmax - 1)
 				list->map[i][x] = 1;
 			else
 				list->map[i][x] = 0;
@@ -206,14 +85,7 @@ void			ft_default_map(t_env *list, int i, int x)
 		}
 		i++;
 	}
-	list->player.x = 4;
-	list->player.y = 4;
-	list->player.dirx = -1;
-	list->player.diry = 0;
-	list->player.planex = 0;
-	list->player.planey = 0.66;
 }
-
 
 int				main(int argc, char **argv)
 {
@@ -225,13 +97,13 @@ int				main(int argc, char **argv)
 		ft_init(&list);
 		ft_draw_pix(&list);
 	}
-	if (argc == 2)
+	else if (argc == 2)
 	{
 		ft_init(&list);
 		ft_verif_name(argv[1], &list);
 		ft_draw_pix(&list);
 	}
 	else
-		ft_error(argc,  0);
+		ft_error(argc, 0);
 	return (0);
 }

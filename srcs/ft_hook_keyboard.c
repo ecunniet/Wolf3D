@@ -6,13 +6,13 @@
 /*   By: ecunniet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/25 12:02:04 by ecunniet          #+#    #+#             */
-/*   Updated: 2017/07/20 22:48:31 by ecunniet         ###   ########.fr       */
+/*   Updated: 2017/07/24 23:29:34 by ecunniet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/wolf3d.h"
 
-void		ft_music(t_env *list)
+void			ft_music(t_env *list)
 {
 	if (list->music.music_on == 1)
 	{
@@ -27,7 +27,7 @@ void		ft_music(t_env *list)
 	list->music.music_on = 1;
 }
 
-static int	ft_key_funct(int keycode, t_env *list)
+static int		ft_key_funct(int keycode, t_env *list)
 {
 	if (keycode == RB && list->rainbow == 0)
 	{
@@ -54,7 +54,7 @@ static int	ft_key_funct(int keycode, t_env *list)
 	return (0);
 }
 
-int			ft_exit(t_env *list)
+int				ft_exit(t_env *list)
 {
 	ft_free(list->ymax, list);
 	system("killall -c sh");
@@ -62,7 +62,7 @@ int			ft_exit(t_env *list)
 	exit(EXIT_SUCCESS);
 }
 
-int			ft_key_press(int keycode, t_env *list)
+int				ft_key_press(int keycode, t_env *list)
 {
 	if (keycode == UP)
 		list->move.up = 1;
@@ -80,47 +80,14 @@ int			ft_key_press(int keycode, t_env *list)
 	return (0);
 }
 
-int			ft_key_release(int keycode, t_env *list)
+int				ft_key_release(int keycode, t_env *list)
 {
+	keycode = 0;
 	list->move.up = 0;
 	list->move.down = 0;
 	list->move.viewr = 0;
 	list->move.viewl = 0;
 	list->move.right = 0;
 	list->move.left = 0;
-	return (0);
-}
-
-void			ft_rotation(t_env *list, double rot, double olddirx, double oldplanex)
-{
-	list->player.dirx = olddirx * cos(rot * list->rotspeed) - list->player.diry * sin(rot * list->rotspeed);
-	list->player.diry = olddirx * sin(rot * list->rotspeed) + list->player.diry * cos(rot * list->rotspeed);
-	list->player.planex = oldplanex * cos(rot * list->rotspeed) - list->player.planey * sin(rot * list->rotspeed);
-	list->player.planey = oldplanex * sin(rot * list->rotspeed) + list->player.planey * cos(rot * list->rotspeed);
-}
-
-void			ft_move_hello(t_env *list, int i, double x, double y)
-{
-	if (list->map[(int)(list->player.y + i * (y * list->movespeed))][(int)(list->player.x)] == 0)
-		list->player.y += i * (y * list->movespeed);
-	if (list->map[(int)(list->player.y)][(int)(list->player.x + i * (x * list->movespeed))] == 0)
-		list->player.x += i *(x * list->movespeed);
-}
-
-int			ft_loop(t_env *list)
-{
-	if (list->move.up > 0)
-		ft_move_hello(list, 1, list->player.dirx, list->player.diry);
-	if (list->move.down > 0)
-		ft_move_hello(list, -1, list->player.dirx, list->player.diry);
-	if (list->move.right > 0)
-		ft_move_hello(list, 1, list->player.planex, list->player.planey);
-	if (list->move.left > 0)
-		ft_move_hello(list, -1, list->player.planex, list->player.planey);
-	if (list->move.viewl > 0)
-		ft_rotation(list, 1, list->player.dirx, list->player.planex);
-	if (list->move.viewr > 0)
-		ft_rotation(list, -1, list->player.dirx, list->player.planex);
-	ft_ray(0, list);
 	return (0);
 }

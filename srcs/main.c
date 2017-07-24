@@ -31,24 +31,14 @@ void			ft_draw_wall(t_env *list, int color, int x)
 	y = 0;
 	while (y < HEIGHT)
 	{
-		if (list->rainbow == 1)
+		if (list->rainbow == 1 && y >= list->draw.drawstart && y < list->draw.drawend)
 		{
-		/*if (y < list->draw.drawstart)
-				ft_pixel_put_image(list, x, y, *(list->r));
-			else */
-			if (y >= list->draw.drawstart && y < list->draw.drawend)
-			{
-				if ((y - list->draw.drawstart) / (list->nblr + 1) >= list->modr)
-					j = ((y - list->draw.drawstart) - list->modr) / list->nblr;
-				else
-					j = (y - list->draw.drawstart) / (list->nblr + 1);
-				j = (j == 6) ? 5 : j;
-				ft_pixel_put_image(list, x, y, *(list->r + j));
-			}
+			if ((y - list->draw.drawstart) / (list->nblr + 1) >= list->modr)
+				j = ((y - list->draw.drawstart) - list->modr) / list->nblr;
 			else
-				ft_pixel_put_image(list, x, y, 0x000000);
-		//	else
-			//ft_pixel_put_image(list, x, y, *(list->r + 5));
+				j = (y - list->draw.drawstart) / (list->nblr + 1);
+			j = (j == 6) ? 5 : j;
+			ft_pixel_put_image(list, x, y, *(list->r + j));
 		}
 		else if (y >= list->draw.drawstart && y < list->draw.drawend)
 			ft_pixel_put_image(list, x, y, color);
@@ -85,11 +75,7 @@ void			ft_find_distance(t_env *list, int x)
 		list->ray.perpwalldist = (list->ray.mapy - list->ray.rayposy + (1 - list->ray.stepy) / 2) / list->ray.raydiry;
 	list->draw.lineheight = (int)(HEIGHT / list->ray.perpwalldist);
 	list->draw.drawstart = HEIGHT / 2 - list->draw.lineheight / 2;
-	if (list->draw.drawstart < 0)
-		list->draw.drawstart = 0;
 	list->draw.drawend = HEIGHT / 2 + list->draw.lineheight / 2;
-	if (list->draw.drawend >= HEIGHT)
-		list->draw.drawend = HEIGHT - 1;
 	ft_color(list, x);
 }
 
@@ -164,6 +150,7 @@ static int		ft_draw_pix(t_env *list)
 	list->img_ptr = mlx_new_image(list->mlx, WIDTH, HEIGHT);
 	list->adi = mlx_get_data_addr(list->img_ptr, &list->bpp,
 	&list->size_line, &list->endian);
+	list->music.music_on = 0;
 	ft_music(list);
 	ft_ray(0, list);
 	mlx_put_image_to_window(list->mlx, list->win, list->img_ptr, 0, 0);
@@ -186,7 +173,7 @@ int				main(int argc, char **argv)
 		list.move.down = 0;
 		list.move.right = 0;
 		list.move.left = 0;
-		list.movespeed = 0.1;
+		list.movespeed = 0.15;
 		list.rotspeed = 0.05;
 		list.rainbow = 0;
 		*(list.r) = 0xf40000;

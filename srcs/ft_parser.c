@@ -46,7 +46,7 @@ void	ft_parser(t_env *list, int x, int y)
 		{
 			if ((y == 0 || y == list->ymax - 1 \
 			|| x == 0 || x == list->xmax) \
-			&& (*ptr < '1' || *ptr > '9'))
+			&& *ptr != '1')
 			{
 				ft_free(y, list);
 				ft_error(-2, 0);
@@ -68,15 +68,5 @@ void	ft_parser(t_env *list, int x, int y)
 		}
 		free(list->line);
 		y++;
-	}
-	while (i < list->ymax)
-	{
-		ft_putnbr(list->map[i][j]);
-		j++;
-		if (j == list->xmax)
-		{
-			i++;
-			j = 0;
-		}
 	}
 }

@@ -43,7 +43,7 @@ void		ft_error(int i, char *str)
 	if (i == -3)
 		ft_putstr("Invalid map. Lines don't have the same length.\n");
 	if (i == -2)
-		ft_putstr("Invalid map. The first and last lines, just like the first and last colomns must be composed of numbers from 1 to 9.\n");
+		ft_putstr("Invalid map. The first and last lines, just like the first and last colomns must be composed of '1'.\n");
 	if (i == -1)
 		ft_putstr("Fail to close file\n");
 	if (i == 0)
@@ -77,8 +77,8 @@ static int	ft_count_x(char const *s, char c, t_env *list)
 		ft_error(-5, 0);
 	while (i < ft_strlen(s))
 	{
-		if (!(s[i] == c || s[i] == 'A' || (s[i] >= '0' && s[i] <= '9'))
-		|| ((s[i] == 'A'|| (s[i] >= '0' && s[i] <= '9')) && !(s[i + 1] == c || s[i + 1] == '\0')) || ((s[i + 1] == c || s[i + 1] == '\0') && !(s[i] == 'A' || (s[i] >= '0' && s[i] <= '9'))))
+		if (!(s[i] == c || s[i] == 'A' || s[i] == '0' || s[i] <= '1')
+		|| ((s[i] == 'A'|| s[i] == '0' || s[i] == '1') && !(s[i + 1] == c || s[i + 1] == '\0')) || ((s[i + 1] == c || s[i + 1] == '\0') && !(s[i] == 'A' || s[i] == '0' || s[i] == '1')))
 			ft_error(-6, 0);
 		else if ((s[i] == 'A'|| (s[i] >= '0' && s[i] <= '9'))
 			&& (s[i + 1] == c || s[i + 1] == '\0'))

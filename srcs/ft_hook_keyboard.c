@@ -14,25 +14,40 @@
 
 void		ft_music(t_env *list)
 {
-	system("while(true); do afplay music/YuriOnIce.mp3; done &");
+	if (list->music.music_on == 1)
+	{
+		system("killall -c sh");
+		system("killall afplay");
+	}
+	if (list->rainbow == 1)
+		system("while(true); do afplay music/Rainbow.mp3; done &");
+	else
+		system("while(true); do afplay music/YuriOnIce.mp3; done &");
+	list->music.pause_on = 0;
 	list->music.music_on = 1;
 }
 
 static int	ft_key_funct(int keycode, t_env *list)
 {
 	if (keycode == RB && list->rainbow == 0)
+	{
 		list->rainbow = 1;
+		ft_music(list);
+	}
 	else if (keycode == RB && list->rainbow == 1)
+	{
 		list->rainbow = 0;
-	if (keycode == MUSIC && list->music.music_on == 1)
+		ft_music(list);
+	}
+	if (keycode == MUSIC && list->music.pause_on == 0)
 	{
 		system("killall -STOP afplay");
-		list->music.music_on = 0;
+		list->music.pause_on = 1;
 	}
-	else if (keycode == MUSIC && list->music.music_on == 0)
+	else if (keycode == MUSIC && list->music.pause_on == 1)
 	{
 		system("killall -CONT afplay");
-		list->music.music_on = 1;
+		list->music.pause_on = 0;
 	}
 	if (keycode == ESC)
 		ft_exit(list);

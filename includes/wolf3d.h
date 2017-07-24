@@ -124,16 +124,17 @@ typedef struct			s_env
 	t_cmd		move;
 }				t_env;
 
-void			ft_music(t_env *list);
+void				ft_free(int y, t_env *list);
+void				ft_music(t_env *list);
 int				ft_exit(t_env *list);
 int				ft_key_press(int keycode, t_env *list);
 int				ft_key_release(int keycode, t_env *list);
-int				ft_loop_ok(t_env *list);
+int				ft_loop(t_env *list);
 void				ft_error(int i, char *str);
 void				ft_ray(int x, t_env *list);
 void				ft_verif_name(char *str, t_env *list);
 void				ft_verif_map(char *filename, t_env *list);
 void				ft_parser(t_env *list, int x, int y);
-int					get_next_line_first(const int fd, char **line);
+int				get_next_line_first(const int fd, char **line);
 
 #endif

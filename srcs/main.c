@@ -158,7 +158,7 @@ static int		ft_draw_pix(t_env *list)
 	mlx_hook(list->win, KEYRELEASEEVENT, KEYRELEASEMASK,
 	&ft_key_release, list);
 	mlx_hook(list->win, DESTROYNOTIFY, STRUCTURENOTIFYMASK, &ft_exit, list);
-	mlx_loop_hook(list->mlx, &ft_loop_ok, list);
+	mlx_loop_hook(list->mlx, &ft_loop, list);
 	mlx_loop(list->mlx);
 	return (0);
 }

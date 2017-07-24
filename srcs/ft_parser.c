@@ -17,7 +17,7 @@ void	ft_free(int y, t_env *list)
 	int i;
 
 	i = 0;
-	while (i <= y)
+	while (i < y)
 	{
 		free(list->map[i]);
 		i++;
@@ -35,11 +35,14 @@ void	ft_parser(t_env *list, int x, int y)
 	i = 0;
 	if (!(list->map = (int **)malloc(sizeof(int *)
 	* list->ymax)))
-		return ;
+		exit(EXIT_FAILURE);
 	while (get_next_line(list->fd, &list->line))
 	{
 		if(!(list->map[y] = (int *)malloc(sizeof(int) * list->xmax)))
-			return ;
+		{
+			ft_free(y - 1, list);
+			exit(EXIT_FAILURE);
+		}
 		x = 0;
 		ptr = list->line;
 		while (x < list->xmax)
@@ -48,7 +51,7 @@ void	ft_parser(t_env *list, int x, int y)
 			|| x == 0 || x == list->xmax) \
 			&& *ptr != '1')
 			{
-				ft_free(y, list);
+				ft_free(y + 1, list);
 				ft_error(-2, 0);
 			}
 			list->map[y][x] = ft_atoi(ptr);

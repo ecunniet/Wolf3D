@@ -163,25 +163,71 @@ static int		ft_draw_pix(t_env *list)
 	return (0);
 }
 
+void			ft_init(t_env *list)
+{
+	list->move.up = 0;
+	list->move.down = 0;
+	list->move.right = 0;
+	list->move.left = 0;
+	list->movespeed = 0.15;
+	list->rotspeed = 0.05;
+	list->rainbow = 0;
+	*(list->r) = 0xf40000;
+	*(list->r + 1) = 0xffa500;
+	*(list->r + 2) = 0xf4f400;
+	*(list->r + 3) = 0x00f400;
+	*(list->r + 4) = 0x0028f4;
+	*(list->r + 5) = 0xa300f4;
+}
+
+void			ft_default_map(t_env *list, int i, int x)
+{
+	list->xmax = 8;
+	list->ymax = 8;
+	if (!(list->map = (int **)malloc(sizeof(int *)
+	* list->ymax)))
+		exit(EXIT_FAILURE);
+	while (i < list->ymax)
+	{
+		if(!(list->map[i] = (int *)malloc(sizeof(int) * list->xmax)))
+		{
+			ft_free(i - 1, list);
+			exit(EXIT_FAILURE);
+		}
+		x = 0;
+		while (x < list->xmax)
+		{
+			if (i == 0 || i == list->ymax - 1 
+			|| x == 0 || x == list->xmax - 1)
+				list->map[i][x] = 1;
+			else
+				list->map[i][x] = 0;
+			x++;
+		}
+		i++;
+	}
+	list->player.x = 4;
+	list->player.y = 4;
+	list->player.dirx = -1;
+	list->player.diry = 0;
+	list->player.planex = 0;
+	list->player.planey = 0.66;
+}
+
+
 int				main(int argc, char **argv)
 {
 	t_env	list;
 
+	if (argc == 1)
+	{
+		ft_default_map(&list, 0, 0);
+		ft_init(&list);
+		ft_draw_pix(&list);
+	}
 	if (argc == 2)
 	{
-		list.move.up = 0;
-		list.move.down = 0;
-		list.move.right = 0;
-		list.move.left = 0;
-		list.movespeed = 0.15;
-		list.rotspeed = 0.05;
-		list.rainbow = 0;
-		*(list.r) = 0xf40000;
-		*(list.r + 1) = 0xffa500;
-		*(list.r + 2) = 0xf4f400;
-		*(list.r + 3) = 0x00f400;
-		*(list.r + 4) = 0x0028f4;
-		*(list.r + 5) = 0xa300f4;
+		ft_init(&list);
 		ft_verif_name(argv[1], &list);
 		ft_draw_pix(&list);
 	}

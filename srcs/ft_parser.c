@@ -48,7 +48,7 @@ void	ft_parser(t_env *list, int x, int y)
 		while (x < list->xmax)
 		{
 			if ((y == 0 || y == list->ymax - 1 \
-			|| x == 0 || x == list->xmax) \
+			|| x == 0 || x == list->xmax - 1) \
 			&& *ptr != '1')
 			{
 				ft_free(y + 1, list);

@@ -52,8 +52,6 @@ void		ft_error(int i, char *str)
 		ft_putstr(str);
 		ft_putchar('\n');
 	}
-	if (i == 1)
-		ft_putstr("Missing file. There is no map for the game.\n");
 	if (i == 2)
 	{
 		ft_putstr("Invalid filename: ");
@@ -62,7 +60,7 @@ void		ft_error(int i, char *str)
 	}
 	if (i > 2)
 		ft_putstr("Wolf3D needs ONLY one map file to start.\n");
-	ft_putstr("Usage: ./wolf3d <filename.wolf>\n");
+	ft_putstr("Usage:\n./wolf3d\n./wolf3d <filename.wolf>\n");
 	exit(EXIT_FAILURE);
 }
 

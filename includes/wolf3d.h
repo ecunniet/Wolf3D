@@ -113,10 +113,11 @@ typedef struct			s_env
 	int		**map;
 	double		movespeed;
 	double		rotspeed;
-	int				rainbow;
-	int				nblr;
-	int				modr;
-	int				r[6];
+	int		start;
+	int			rainbow;
+	int			nblr;
+	int			modr;
+	int			r[6];
 	t_ray		ray;
 	t_wall		draw;
 	t_pos		player;
